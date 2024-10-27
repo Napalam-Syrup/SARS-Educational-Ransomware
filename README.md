@@ -1,5 +1,5 @@
 # Disclaimer: Educational Use Only
-This is a live ransomware, and can be activated. Source code has been provided, and safety checks have been builtin and processes are non-distructive. However, the malware can easily be activated and changed, and therefore use responsibily. This repository has been made private, and should only be accessed by the author and trusted individuals. 
+This is a live ransomware, and can be activated. Source code has been provided, and safety checks have been builtin and processes are non-destructive. However, the malware can easily be activated and changed, and therefore use responsibily. This repository has been made private, and should only be accessed by the author and trusted individuals. Do not repurpose this educational ransomware for malicious purposes. 
 
 If you are trusted, do not share this repository around. 
 
@@ -12,12 +12,20 @@ By downloading or using this software, you agree to the following:
 - The developer is not responsible for any misuse of this software.
 - Use responsibly, and always in compliance with local laws and regulations.
 
-Make sure you ONLY COMPROMISE YOUR OWN SYSTEM, OR WITH WRITTEN PERMISSION. And do not repurpose this educational ransomware for malicious purposes. I will take no responsibility for any legal repurcussions.
+Make sure you ONLY COMPROMISE YOUR OWN SYSTEM, OR WITH WRITTEN PERMISSION. I will take no responsibility for any legal repurcussions.
 
 # Something Awesome Ransomware - Simple (SARS)
 This repository is created to host my Something Awesome Project for the course COMP6841. It is a ransomwware, designed to educate myself and others in malware developement, and the ease in which it can cause damage. It has been built to target Windows Machines, due to the majority of the world utilising a Windows System (and I also thought it would be more fun to target).
 
-The ransomware creates a foothold in the system using a malicious Word Document with embedded macros. Two strains/variants of this ransomware has been included - one to establish a C2 connection with a machine, the other as a fire-and-forget ransomware. Files are copied and encrypted, leaving the original file unscathed.
+The ransomware creates a foothold in the system using a malicious Word Document with embedded macros. It requires a HoaxShell listening server (it's an awesome reverse shell, check it out below!), as well as a server hosting the files (for demonstration purposes, this would be targetted to my machine). Two strains/variants of this ransomware has been included - one to establish a C2 connection with a machine, the other as a fire-and-forget ransomware. 
+
+There are safety checks in place to make sure the ransomware is as benign as possible. 
+- Files are copied and encrypted, leaving the original file unscathed.
+- An expiration time check has been included
+- Keys are created and stored in the same file system.
+- Would not traverse directories, and will only encrypted the current file layers.
+- No lateral movement
+- Will only run in a certain subdirectory.
 
 # Installation
 Run `git clone <insert link>` in your local terminal to clone the repository.
@@ -39,7 +47,7 @@ cd openssl-1.1.1w
   
 To compile the code: `x86_64-w64-mingw32-gcc -o Explore.exe <file>.c -I./path/to/openssl/include -L.path/to/openssl -lssl -lcrypto -lws2_32 -lwsock32 -lcrypt32 -static`
 
-# Usage/Demostration (with C2 capabilities)
+# Usage/Demonstration (with C2 capabilities)
 ## Attacking
 1. Create a HoaxShell listener on an attacking machine using the command `python3 hoaxshell.py -s <ip> -r -g`. Please refer to the HoaxShell documentation above to learn more about this tool
 2. Activate the Word document (and its macros) on the victim machine.
