@@ -14,7 +14,7 @@ By downloading or using this software, you agree to the following:
 
 Make sure you ONLY COMPROMISE YOUR OWN SYSTEM, OR WITH WRITTEN PERMISSION. And do not repurpose this educational ransomware for malicious purposes. I will take no responsibility for any legal repurcussions.
 
-# Something Awesome Ransomware
+# Something Awesome Ransomware - Simple (SARS)
 This repository is created to host my Something Awesome Project for the course COMP6841. It is a ransomwware, designed to educate myself and others in malware developement, and the ease in which it can cause damage. It has been built to target Windows Machines, due to the majority of the world utilising a Windows System (and I also thought it would be more fun to target).
 
 The ransomware creates a foothold in the system using a malicious Word Document with embedded macros. Two strains/variants of this ransomware has been included - one to establish a C2 connection with a machine, the other as a fire-and-forget ransomware. Files are copied and encrypted, leaving the original file unscathed.
