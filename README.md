@@ -45,7 +45,7 @@ cd openssl-1.1.1w
 - MinGW: run `sudo apt-get install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wine64`
 - Word (Attack vector)
   
-To compile the code: `x86_64-w64-mingw32-gcc -o Explore.exe <file>.c -I./path/to/openssl/include -L.path/to/openssl -lssl -lcrypto -lws2_32 -lwsock32 -lcrypt32 -static`
+To compile the code: `x86_64-w64-mingw32-gcc -o <outfilename>.exe <file>.c -I./path/to/openssl/include -L.path/to/openssl -lssl -lcrypto -lws2_32 -lwsock32 -lcrypt32 -static`
 
 # Usage/Demonstration (with C2 capabilities)
 ## Attacking
