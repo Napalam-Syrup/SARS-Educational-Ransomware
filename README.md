@@ -36,14 +36,14 @@ Install dependencies. These are:
 - Word (Attack vector)
 - OpenSSL library for Linux:
   1. Run
-```
-wget https://www.openssl.org/source/openssl-1.1.1w.tar.gz
-tar -xvzf openssl-1.1.1w.tar.gz
-cd openssl-1.1.1w
-```
-2. Run `./Configure mingw64 no-asm shared --cross-compile-prefix=x86_64-w64-mingw32-` (ensure that MingGW is installed)
-3. Run `make`
-4. Run `make install DESTDIR=/path/to/target/directory`, preferably in the same directory as respository.
+  ```
+  wget https://www.openssl.org/source/openssl-1.1.1w.tar.gz
+  tar -xvzf openssl-1.1.1w.tar.gz
+  cd openssl-1.1.1w
+  ```
+  2. Run `./Configure mingw64 no-asm shared --cross-compile-prefix=x86_64-w64-mingw32-` (ensure that MingGW is installed)
+  3. Run `make`
+  4. Run `make install DESTDIR=/path/to/target/directory`, preferably in the same directory as respository.
 
   
 To compile the code: `x86_64-w64-mingw32-gcc -o <outfilename>.exe <file>.c -I./path/to/openssl/include -L.path/to/openssl -lssl -lcrypto -lws2_32 -lwsock32 -lcrypt32 -static`
