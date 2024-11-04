@@ -32,6 +32,8 @@ Run `git clone <insert link>` in your local terminal to clone the repository.
 
 Install dependencies. These are:
 - HoaxShell: https://github.com/t3l3machus/hoaxshell
+- MinGW: run `sudo apt-get install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wine64`
+- Word (Attack vector)
 - OpenSSL library for Linux:
   1. Run
 ```
@@ -42,8 +44,7 @@ cd openssl-1.1.1w
 2. Run `./Configure mingw64 no-asm shared --cross-compile-prefix=x86_64-w64-mingw32-` (ensure that MingGW is installed)
 3. Run `make`
 4. Run `make install DESTDIR=/path/to/target/directory`, preferably in the same directory as respository.
-- MinGW: run `sudo apt-get install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wine64`
-- Word (Attack vector)
+
   
 To compile the code: `x86_64-w64-mingw32-gcc -o <outfilename>.exe <file>.c -I./path/to/openssl/include -L.path/to/openssl -lssl -lcrypto -lws2_32 -lwsock32 -lcrypt32 -static`
 
