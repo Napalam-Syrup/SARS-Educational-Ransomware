@@ -1,7 +1,7 @@
 # Disclaimer: Educational Use Only
 This is a live ransomware, and can be activated. Source code has been provided, and safety checks have been builtin and processes are non-destructive. However, the malware can easily be activated and changed, and therefore use responsibily. This repository has been made private, and should only be accessed by the author and trusted individuals. Do not repurpose this educational ransomware for malicious purposes. 
 
-If you are trusted, do not share this repository around. 
+If you are trusted, do not share this repository around. And despite having safety checks in place, this can still be worked around and abused. Be responsible. I will not take any repurcussion nor consequences of your actions.
 
 This ransomware is created strictly for educational purposes and is intended to demonstrate how ransomware works in a controlled environment. It is designed to help cybersecurity professionals, students, and researchers understand and learn about the mechanics of ransomware in order to improve defenses against such attacks.
 
